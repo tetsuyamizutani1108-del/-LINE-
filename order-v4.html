@@ -224,11 +224,10 @@ renderOrder();
 }
 
 function updateProg(){
-var ids=Object.keys(state);
-var n=0;
-for(var i=0;i<ids.length;i++){if(state[ids[i]].checked)n++;}
-document.getElementById(‘progFill’).style.width=(n/ids.length*100)+’%’;
-document.getElementById(‘progLbl’).textContent=n+’ / ’+ids.length;
+var total=0,n=0;
+for(var i=0;i<CATS.length;i++){for(var j=0;j<CATS[i].items.length;j++){total++;if(state[CATS[i].items[j].id].checked)n++;}}
+document.getElementById(‘progFill’).style.width=(n/total*100)+’%’;
+document.getElementById(‘progLbl’).textContent=n+’ / ’+total;
 }
 
 function resetAll(){
@@ -255,8 +254,7 @@ return lines.join(’\n’);
 
 function openLineModal(){
 var any=false;
-var ids=Object.keys(state);
-for(var i=0;i<ids.length;i++){if(state[ids[i]].checked){any=true;break;}}
+for(var i=0;i<CATS.length;i++){for(var j=0;j<CATS[i].items.length;j++){if(state[CATS[i].items[j].id].checked){any=true;break;}}}
 if(!any){showToast(‘商品を選択してください’);return;}
 document.getElementById(‘preview’).textContent=buildText();
 document.getElementById(‘modal’).className=‘overlay on’;
