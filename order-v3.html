@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LINE発注</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#f4f4f4;color:#1a1a1a;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;min-height:100vh;padding-bottom:110px;}
+header{background:#ffffff;border-bottom:2px solid #e0e0e0;padding:14px 16px 10px;position:sticky;top:0;z-index:100;-webkit-box-shadow:0 2px 8px rgba(0,0,0,0.08);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.h-top{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:8px;margin-bottom:10px;}
+h1{font-size:18px;font-weight:900;color:#1a1a1a;}
+.tag{font-size:11px;background:#ff6b35;color:#ffffff;padding:3px 9px;border-radius:4px;font-weight:700;letter-spacing:0.5px;}
+.tabs{display:-webkit-box;display:-webkit-flex;display:flex;gap:6px;margin-bottom:10px;}
+.tab{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 4px;border:2px solid #e0e0e0;border-radius:10px;background:#f0f0f0;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:13px;font-weight:700;color:#999999;cursor:pointer;text-align:center;-webkit-appearance:none;appearance:none;}
+.tab.on{background:#ff6b35;color:#ffffff;border-color:#ff6b35;}
+.prog-row{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;}
+.prog-bar{-webkit-box-flex:1;-webkit-flex:1;flex:1;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:#ff6b35;border-radius:3px;-webkit-transition:width .3s;transition:width .3s;width:0%;}
+.prog-lbl{font-size:12px;color:#999;white-space:nowrap;font-weight:600;}
+.main{padding:0 14px;max-width:600px;margin:0 auto;}
+.page{display:none;}.page.on{display:block;}
+.cat{margin-top:18px;}
+.cat-hd{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:7px;margin-bottom:8px;padding:0 2px;}
+.cat-icon{font-size:16px;}
+.cat-nm{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#999999;text-transform:uppercase;}
+.cat-ct{font-size:11px;color:#ff6b35;margin-left:auto;font-weight:700;}
+.items{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;gap:5px;}
+.item{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:#ffffff;border:2px solid #e0e0e0;border-radius:12px;padding:13px 14px;cursor:pointer;gap:11px;-webkit-box-shadow:0 1px 4px rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.item.chk{background:#f0fff4;border-color:#86efac;}
+.cb{width:24px;height:24px;border:2px solid #d0d0d0;border-radius:7px;-webkit-flex-shrink:0;flex-shrink:0;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;background:#f0f0f0;}
+.item.chk .cb{background:#22c55e;border-color:#22c55e;}
+.ck{display:none;color:#ffffff;font-size:14px;font-weight:900;line-height:1;}
+.item.chk .ck{display:block;}
+.item-info{-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:8px;}
+.iname{font-size:15px;font-weight:600;color:#1a1a1a;}
+.item.chk .iname{color:#aaaaaa;text-decoration:line-through;}
+.qty-wrap{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:5px;-webkit-flex-shrink:0;flex-shrink:0;}
+.qb{width:28px;height:28px;background:#f0f0f0;border:2px solid #e0e0e0;border-radius:7px;color:#1a1a1a;font-size:16px;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-weight:700;-webkit-appearance:none;appearance:none;}
+.qv{font-size:15px;font-weight:700;min-width:20px;text-align:center;color:#ff6b35;}
+.item.chk .qv{color:#aaaaaa;}
+.ilast{font-size:11px;-webkit-flex-shrink:0;flex-shrink:0;margin-left:auto;font-weight:700;white-space:nowrap;}
+.ilast.d0{color:#16a34a;}
+.ilast.d2{color:#ca8a04;}
+.ilast.d3{color:#dc2626;}
+/* 履歴 */
+.hist-empty{text-align:center;padding:60px 20px;color:#999;}
+.hist-empty-ic{font-size:44px;margin-bottom:10px;}
+.hcard{background:#ffffff;border:2px solid #e0e0e0;border-radius:14px;margin-top:14px;overflow:hidden;-webkit-box-shadow:0 1px 4px rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.hcard-hd{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #e0e0e0;background:#f8f8f8;}
+.hdate{font-weight:800;font-size:14px;color:#1a1a1a;}
+.hmeta{font-size:11px;color:#999;font-weight:600;}
+.hchips{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:5px;padding:11px 14px;}
+.hchip{background:#fff0eb;color:#ff6b35;border:1px solid #fcd9c8;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:700;}
+.hcard-ft{display:-webkit-box;display:-webkit-flex;display:flex;gap:6px;padding:10px 14px;border-top:1px solid #e0e0e0;}
+.hbtn{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;border-radius:9px;border:none;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.hbtn-load{background:#ff6b35;color:#ffffff;}
+.hbtn-del{background:#f0f0f0;color:#999;border:2px solid #e0e0e0;-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;padding:10px 14px;}
+/* ボトム */
+.bot{position:fixed;bottom:0;left:0;right:0;background:#ffffff;border-top:2px solid #e0e0e0;padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-box-shadow:0 -2px 8px rgba(0,0,0,0.08);box-shadow:0 -2px 8px rgba(0,0,0,0.08);}
+.btn{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:14px;border-radius:12px;border:none;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:14px;font-weight:800;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.btn-p{background:#ff6b35;color:#ffffff;}
+.btn-s{background:#f0f0f0;color:#1a1a1a;border:2px solid #e0e0e0;-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;padding:14px 18px;}
+/* トースト */
+.toast{position:fixed;top:80px;left:50%;-webkit-transform:translateX(-50%) translateY(-10px);transform:translateX(-50%) translateY(-10px);background:#1a1a1a;color:#fff;font-weight:700;font-size:13px;padding:11px 22px;border-radius:22px;opacity:0;-webkit-transition:all .3s;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.on{opacity:1;-webkit-transform:translateX(-50%) translateY(0);transform:translateX(-50%) translateY(0);}
+/* モーダル */
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;padding:20px;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
+.overlay.on{display:-webkit-box;display:-webkit-flex;display:flex;}
+.modal{background:#ffffff;border-radius:18px;width:100%;max-width:560px;margin:0 auto;overflow:hidden;-webkit-box-shadow:0 8px 32px rgba(0,0,0,0.18);box-shadow:0 8px 32px rgba(0,0,0,0.18);}
+.modal-hd{padding:15px 18px;border-bottom:1px solid #e0e0e0;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;}
+.modal-title{font-size:15px;font-weight:800;}
+.modal-x{background:none;border:none;color:#999;font-size:22px;cursor:pointer;line-height:1;-webkit-appearance:none;appearance:none;}
+.modal-body{padding:14px 18px;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.preview{background:#f4f4f4;border-radius:12px;padding:14px 16px;font-size:13px;line-height:2;white-space:pre-wrap;font-family:-apple-system,'Hiragino Sans',sans-serif;border:1px solid #e0e0e0;word-break:break-all;color:#1a1a1a;}
+.modal-ft{padding:12px 18px;border-top:1px solid #e0e0e0;display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-top">
+    <h1>📋 LINE発注</h1><span class="tag">天よし</span>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('order')">✏️ 発注</button>
+    <button class="tab" onclick="switchTab('hist')">🕐 履歴</button>
+  </div>
+  <div class="prog-row" id="progRow">
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-lbl" id="progLbl">0 / 0</div>
+  </div>
+</header>
+<div class="main">
+  <div class="page on" id="page-order"></div>
+  <div class="page" id="page-hist"></div>
+</div>
+<div class="bot" id="bot">
+  <button class="btn btn-s" onclick="resetAll()">リセット</button>
+  <button class="btn btn-p" onclick="openLineModal()">📋 LINEメッセージ生成</button>
+</div>
+<div class="toast" id="toast"></div>
+<div class="overlay" id="modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title">📱 LINEへコピー</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body"><div class="preview" id="preview"></div></div>
+    <div class="modal-ft">
+      <button class="btn btn-s" onclick="closeModal()" style="flex:0 0 auto;padding:14px 18px;">閉じる</button>
+      <button class="btn btn-p" onclick="copyLine()">コピーする</button>
+    </div>
+  </div>
+</div>
+<script>
+var CATS=[
+  {icon:'🐟',name:'魚・海鮮',items:[
+    {id:'f1',name:'穴子'},{id:'f2',name:'尻尾なし',hasQty:true,min:1,max:6},
+    {id:'f3',name:'タイ'},{id:'f4',name:'イカ'},{id:'f5',name:'イカ明太'},
+    {id:'f6',name:'うなぎ'},{id:'f7',name:'サーモン'},{id:'f8',name:'カキ'},
+    {id:'f9',name:'エビ'},{id:'f10',name:'車海老'},{id:'f11',name:'ホタテ'},
+    {id:'f12',name:'カニ'},{id:'f13',name:'ハモ'},{id:'f14',name:'白子'},{id:'f15',name:'タチウオ'}
+  ]},
+  {icon:'🥩',name:'肉・加工品',items:[
+    {id:'m1',name:'鳥もも'},{id:'m2',name:'牛すじ'},{id:'m3',name:'肉茶そばの肉'},{id:'m5',name:'肉団子'}
+  ]},
+  {icon:'🥦',name:'野菜',items:[
+    {id:'v1',name:'さつまいも',hasQty:true,min:1,max:6},{id:'v2',name:'カボチャ',hasQty:true,min:1,max:6},
+    {id:'v3',name:'まいたけ',hasQty:true,min:1,max:6},{id:'v4',name:'ナス'},{id:'v5',name:'ピーマン'},
+    {id:'v6',name:'ごぼう'},{id:'v7',name:'インゲン'},{id:'v8',name:'オクラ'},
+    {id:'v9',name:'大葉'},{id:'v10',name:'レモン'}
+  ]},
+  {icon:'🥚',name:'卵・乳製品',items:[
+    {id:'e1',name:'温玉',hasQty:true,min:1,max:6},{id:'e2',name:'ゆで卵'},{id:'e4',name:'チーズ'}
+  ]},
+  {icon:'🍜',name:'麺・乾物',items:[
+    {id:'n1',name:'茶そば'},{id:'n2',name:'うどん出汁'},{id:'n7',name:'茶そばタレ'},
+    {id:'n3',name:'いりこ'},{id:'n4',name:'花かつお'},{id:'n5',name:'昆布'},{id:'n6',name:'わかめ'}
+  ]},
+  {icon:'🍶',name:'調味料・タレ',items:[
+    {id:'s1',name:'天つゆのもと',hasQty:true,min:1,max:6},{id:'s2',name:'天丼タレ',hasQty:true,min:1,max:6},
+    {id:'s3',name:'弁当タレ'},{id:'s5',name:'だし醤油'},{id:'s6',name:'大根おろし'},
+    {id:'s11',name:'大根おろし❌'},{id:'s8',name:'米油'},{id:'s9',name:'てんぷら粉'},{id:'s12',name:'赤出汁みそ'}
+  ]},
+  {icon:'🫙',name:'おでん種・揚げ物',items:[
+    {id:'o1',name:'ごぼう天'},{id:'o2',name:'丸天'},{id:'o3',name:'こんにゃく'},
+    {id:'o4',name:'おでん用大根'},{id:'o5',name:'豆腐'},{id:'o6',name:'おでん味噌'}
+  ]},
+  {icon:'🥤',name:'飲み物',items:[
+    {id:'d1',name:'コーラ'},{id:'d2',name:'ジンジャーエール'},{id:'d3',name:'カルピス'},
+    {id:'d4',name:'オレンジジュース'},{id:'d5',name:'炭酸水'},{id:'d6',name:'烏龍茶'},
+    {id:'d7',name:'芋焼酎'},{id:'d8',name:'麦焼酎'}
+  ]},
+  {icon:'🍨',name:'デザート',items:[
+    {id:'sw1',name:'イチゴアイス'}
+  ]}
+];
+var state={};
+CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+var HIST_KEY='amayoshi_order_history';
+var LAST_KEY='amayoshi_last_ordered';
+function loadHistory(){
+  try{
+    var h=JSON.parse(localStorage.getItem(HIST_KEY)||'[]');
+    var cut=new Date(); cut.setDate(cut.getDate()-30); cut.setHours(0,0,0,0);
+    return h.filter(function(x){return new Date(x.date)>=cut;});
+  }catch(e){return [];}
+}
+function saveHistory(h){localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+function loadLast(){try{return JSON.parse(localStorage.getItem(LAST_KEY)||'{}');}catch(e){return {};}}
+function saveLast(m){localStorage.setItem(LAST_KEY,JSON.stringify(m));}
+function dayDiff(ds){
+  var d=new Date(ds),n=new Date();
+  d.setHours(0,0,0,0); n.setHours(0,0,0,0);
+  return Math.round((n-d)/86400000);
+}
+function lastLabel(id){
+  var m=loadLast();
+  if(!m[id]) return null;
+  var d=dayDiff(m[id]);
+  if(d>15) return null;
+  if(d===0) return {text:'今日',cls:'d0'};
+  if(d<=3)  return {text:d+'日前',cls:'d3'};
+  return {text:d+'日前',cls:'d2'};
+}
+function renderOrder(){
+  var el=document.getElementById('page-order');
+  el.innerHTML='';
+  CATS.forEach(function(cat){
+    var checked=cat.items.filter(function(i){return state[i.id].checked;}).length;
+    var div=document.createElement('div');
+    div.className='cat';
+    div.innerHTML='<div class="cat-hd"><span class="cat-icon">'+cat.icon+'</span><span class="cat-nm">'+cat.name+'</span><span class="cat-ct">'+checked+'/'+cat.items.length+'</span></div><div class="items" id="ci-'+cat.name+'"></div>';
+    el.appendChild(div);
+    var wrap=div.querySelector('.items');
+    cat.items.forEach(function(item){
+      var s=state[item.id];
+      var lbl=lastLabel(item.id);
+      var d=document.createElement('div');
+      d.className='item'+(s.checked?' chk':'');
+      var qtyHtml=item.hasQty?'<div class="qty-wrap"><button class="qb" onclick="chQty(event,\''+item.id+'\',-1)">−</button><span class="qv">'+s.qty+'</span><button class="qb" onclick="chQty(event,\''+item.id+'\',1)">＋</button></div>':'';
+      var lblHtml=lbl?'<span class="ilast '+lbl.cls+'">'+lbl.text+'</span>':'';
+      d.innerHTML='<div class="cb"><span class="ck">✓</span></div><div class="item-info"><span class="iname">'+item.name+'</span>'+qtyHtml+'</div>'+lblHtml;
+      d.addEventListener('click',function(e){
+        if(e.target.className==='qb'||e.target.closest&&e.target.closest('.qb')) return;
+        toggle(item.id);
+      });
+      wrap.appendChild(d);
+    });
+  });
+  updateProg();
+}
+function toggle(id){state[id].checked=!state[id].checked;renderOrder();}
+function chQty(e,id,delta){
+  e.stopPropagation();
+  var item=null;
+  CATS.forEach(function(c){c.items.forEach(function(i){if(i.id===id)item=i;});});
+  var mn=item.min||1,mx=item.max||99;
+  state[id].qty=Math.min(mx,Math.max(mn,state[id].qty+delta));
+  renderOrder();
+}
+function updateProg(){
+  var ids=Object.keys(state);
+  var n=ids.filter(function(id){return state[id].checked;}).length;
+  document.getElementById('progFill').style.width=(n/ids.length*100)+'%';
+  document.getElementById('progLbl').textContent=n+' / '+ids.length;
+}
+function resetAll(){
+  CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+  renderOrder();
+  showToast('リセットしました');
+}
+function buildText(){
+  var lines=[],now=new Date();
+  var ds=(now.getMonth()+1)+'/'+(now.getDate());
+  var yw=['日','月','火','水','木','金','土'][now.getDay()];
+  lines.push('【発注】'+ds+'('+yw+')');lines.push('');
+  CATS.forEach(function(cat){
+    var sel=cat.items.filter(function(i){return state[i.id].checked;});
+    if(!sel.length) return;
+    lines.push('▼'+cat.name);
+    sel.forEach(function(item){
+      lines.push(item.hasQty?'・'+item.name+' ×'+state[item.id].qty:'・'+item.name);
+    });
+    lines.push('');
+  });
+  lines.push('宜しくお願いします🙇');
+  return lines.join('\n');
+}
+function openLineModal(){
+  var any=Object.values(state).some(function(s){return s.checked;});
+  if(!any){showToast('商品を選択してください');return;}
+  document.getElementById('preview').textContent=buildText();
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){document.getElementById('modal').classList.remove('on');}
+function copyLine(){
+  var text=document.getElementById('preview').textContent;
+  var now=new Date();
+  var ds=now.getFullYear()+'-'+(now.getMonth()+1<10?'0':'')+(now.getMonth()+1)+'-'+(now.getDate()<10?'0':'')+now.getDate();
+  var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  var items=[];
+  CATS.forEach(function(c){c.items.forEach(function(i){if(state[i.id].checked)items.push({id:i.id,name:i.name,qty:i.hasQty?state[i.id].qty:null});});});
+  var hist=loadHistory();
+  hist.unshift({date:ds,time:ts,items:items,text:text});
+  if(hist.length>30) hist.pop();
+  saveHistory(hist);
+  var last=loadLast();
+  items.forEach(function(i){last[i.id]=ds;});
+  saveLast(last);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      closeModal(); showToast('コピーしました！LINEに貼り付けてください'); renderOrder();
+    }).catch(function(){fallbackCopy(text);});
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{document.execCommand('copy'); closeModal(); showToast('コピーしました！LINEに貼り付けてください'); renderOrder();}
+  catch(e){showToast('コピーに失敗しました');}
+  document.body.removeChild(ta);
+}
+function renderHist(){
+  var el=document.getElementById('page-hist');
+  var hist=loadHistory();
+  if(!hist.length){el.innerHTML='<div class="hist-empty"><div class="hist-empty-ic">📭</div>まだ履歴がありません</div>';return;}
+  el.innerHTML='';
+  hist.forEach(function(h,idx){
+    var d=new Date(h.date);
+    var yw=['日','月','火','水','木','金','土'][d.getDay()];
+    var diff=dayDiff(h.date);
+    var ds=diff===0?'今日':diff===1?'昨日':diff+'日前';
+    var card=document.createElement('div');
+    card.className='hcard';
+    var chips=h.items.map(function(i){return '<span class="hchip">'+i.name+(i.qty?' ×'+i.qty:'')+'</span>';}).join('');
+    card.innerHTML='<div class="hcard-hd"><span class="hdate">'+h.date.replace(/-/g,'/')+'('+yw+') '+h.time+'</span><span class="hmeta">'+ds+' · '+h.items.length+'品</span></div><div class="hchips">'+chips+'</div><div class="hcard-ft"><button class="hbtn hbtn-load" onclick="loadFromHist('+idx+')">この内容を読み込む</button><button class="hbtn hbtn-del" onclick="delHist('+idx+')">削除</button></div>';
+    el.appendChild(card);
+  });
+}
+function loadFromHist(idx){
+  var hist=loadHistory(); var h=hist[idx];
+  CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+  h.items.forEach(function(i){if(state[i.id]!==undefined){state[i.id].checked=true;if(i.qty)state[i.id].qty=i.qty;}});
+  switchTab('order'); showToast(h.date+'の発注を読み込みました');
+}
+function delHist(idx){
+  var hist=loadHistory(); hist.splice(idx,1); saveHistory(hist); renderHist(); showToast('削除しました');
+}
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('on',['order','hist'][i]===t);});
+  document.getElementById('page-order').classList.toggle('on',t==='order');
+  document.getElementById('page-hist').classList.toggle('on',t==='hist');
+  document.getElementById('progRow').style.display=t==='order'?'flex':'none';
+  document.getElementById('bot').style.display=t==='order'?'flex':'none';
+  if(t==='hist') renderHist();
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2500);
+}
+renderOrder();
+</script>
+</body>
+</html>
