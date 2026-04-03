@@ -39,7 +39,6 @@ h1{font-size:17px;font-weight:900;}
 .ck{display:none;color:#fff;font-size:13px;font-weight:900;}
 .item.chk .ck{display:block;}
 .item-info{flex:1;min-width:0;}
-.iname-row{display:flex;align-items:center;gap:10px;}
 .iname{font-size:14px;font-weight:500;}
 .item.chk .iname{color:var(–muted);text-decoration:line-through;}
 .ilast{font-size:11px;font-family:‘DM Mono’,monospace;flex-shrink:0;margin-left:auto;padding-left:8px;}
@@ -243,17 +242,15 @@ function renderOrder() {
       div.innerHTML = `
         <div class="cb"><span class="ck">✓</span></div>
         <div class="item-info">
-          <div class="iname-row">
-            <span class="iname">${item.name}</span>
-            ${item.hasQty ? `
-            <div class="qty-wrap" onclick="event.stopPropagation()">
-              <button class="qb" onclick="chQty(event,'${item.id}',-1)">−</button>
-              <span class="qv">${s.qty}</span>
-              <button class="qb" onclick="chQty(event,'${item.id}',1)">＋</button>
-            </div>` : ''}
-          </div>
+          <div class="iname">${item.name}</div>
         </div>
-        ${lbl ? `<span class="ilast ${lbl.cls}">${lbl.text}</span>` : ''}`;
+        ${lbl ? `<span class="ilast ${lbl.cls}">${lbl.text}</span>` : ''}
+        ${item.hasQty ? `
+        <div class="qty-wrap">
+          <button class="qb" onclick="chQty(event,'${item.id}',-1)">−</button>
+          <span class="qv">${s.qty}</span>
+          <button class="qb" onclick="chQty(event,'${item.id}',1)">＋</button>
+        </div>` : ''}`;
       div.addEventListener('click', e => {
         if (e.target.closest('.qb')) return;
         toggle(item.id);
