@@ -24,7 +24,7 @@ h1{font-size:18px;font-weight:900;color:#1a1a1a;}
 .cat{margin-top:18px;}
 .cat-hd{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:7px;margin-bottom:8px;padding:0 2px;}
 .cat-icon{font-size:16px;}
-.cat-nm{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#999999;}
+.cat-nm{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#999999;text-transform:uppercase;}
 .cat-ct{font-size:11px;color:#ff6b35;margin-left:auto;font-weight:700;}
 .items{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;gap:5px;}
 .item{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:#ffffff;border:2px solid #e0e0e0;border-radius:12px;padding:13px 14px;cursor:pointer;gap:11px;-webkit-box-shadow:0 1px 4px rgba(0,0,0,0.06);box-shadow:0 1px 4px rgba(0,0,0,0.06);}
@@ -54,15 +54,19 @@ h1{font-size:18px;font-weight:900;color:#1a1a1a;}
 .hmeta{font-size:11px;color:#999;font-weight:600;}
 .hchips{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:5px;padding:11px 14px;}
 .hchip{background:#fff0eb;color:#ff6b35;border:1px solid #fcd9c8;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:700;}
-.hcard-ft{padding:10px 14px;border-top:1px solid #e0e0e0;text-align:right;}
-.hbtn-del{background:#f0f0f0;color:#999;border:2px solid #e0e0e0;padding:9px 18px;border-radius:9px;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.hcard-ft{display:-webkit-box;display:-webkit-flex;display:flex;gap:6px;padding:10px 14px;border-top:1px solid #e0e0e0;}
+.hbtn{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;border-radius:9px;border:none;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.hbtn-load{background:#ff6b35;color:#ffffff;}
+.hbtn-del{background:#f0f0f0;color:#999;border:2px solid #e0e0e0;-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;padding:10px 14px;}
 /* ボトム */
 .bot{position:fixed;bottom:0;left:0;right:0;background:#ffffff;border-top:2px solid #e0e0e0;padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-box-shadow:0 -2px 8px rgba(0,0,0,0.08);box-shadow:0 -2px 8px rgba(0,0,0,0.08);}
 .btn{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:14px;border-radius:12px;border:none;font-family:-apple-system,'Hiragino Sans',sans-serif;font-size:14px;font-weight:800;cursor:pointer;-webkit-appearance:none;appearance:none;}
 .btn-p{background:#ff6b35;color:#ffffff;}
 .btn-s{background:#f0f0f0;color:#1a1a1a;border:2px solid #e0e0e0;-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;padding:14px 18px;}
+/* トースト */
 .toast{position:fixed;top:80px;left:50%;-webkit-transform:translateX(-50%) translateY(-10px);transform:translateX(-50%) translateY(-10px);background:#1a1a1a;color:#fff;font-weight:700;font-size:13px;padding:11px 22px;border-radius:22px;opacity:0;-webkit-transition:all .3s;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
 .toast.on{opacity:1;-webkit-transform:translateX(-50%) translateY(0);transform:translateX(-50%) translateY(0);}
+/* モーダル */
 .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;padding:20px;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
 .overlay.on{display:-webkit-box;display:-webkit-flex;display:flex;}
 .modal{background:#ffffff;border-radius:18px;width:100%;max-width:560px;margin:0 auto;overflow:hidden;-webkit-box-shadow:0 8px 32px rgba(0,0,0,0.18);box-shadow:0 8px 32px rgba(0,0,0,0.18);}
@@ -76,10 +80,12 @@ h1{font-size:18px;font-weight:900;color:#1a1a1a;}
 </head>
 <body>
 <header>
-  <div class="h-top"><h1>📋 LINE発注</h1><span class="tag">天よし</span></div>
+  <div class="h-top">
+    <h1>📋 LINE発注</h1><span class="tag">天よし</span>
+  </div>
   <div class="tabs">
-    <button class="tab on" id="tab-order" onclick="switchTab('order')">✏️ 発注</button>
-    <button class="tab" id="tab-hist" onclick="switchTab('hist')">🕐 履歴</button>
+    <button class="tab on" onclick="switchTab('order')">✏️ 発注</button>
+    <button class="tab" onclick="switchTab('hist')">🕐 履歴</button>
   </div>
   <div class="prog-row" id="progRow">
     <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
@@ -103,7 +109,7 @@ h1{font-size:18px;font-weight:900;color:#1a1a1a;}
     </div>
     <div class="modal-body"><div class="preview" id="preview"></div></div>
     <div class="modal-ft">
-      <button class="btn btn-s" onclick="closeModal()" style="-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;padding:14px 18px;">閉じる</button>
+      <button class="btn btn-s" onclick="closeModal()" style="flex:0 0 auto;padding:14px 18px;">閉じる</button>
       <button class="btn btn-p" onclick="copyLine()">コピーする</button>
     </div>
   </div>
@@ -147,192 +153,178 @@ var CATS=[
     {id:'d4',name:'オレンジジュース'},{id:'d5',name:'炭酸水'},{id:'d6',name:'烏龍茶'},
     {id:'d7',name:'芋焼酎'},{id:'d8',name:'麦焼酎'}
   ]},
-  {icon:'🍨',name:'デザート',items:[{id:'sw1',name:'イチゴアイス'}]}
+  {icon:'🍨',name:'デザート',items:[
+    {id:'sw1',name:'イチゴアイス'}
+  ]}
 ];
-
 var state={};
-var i,c,it;
-for(i=0;i<CATS.length;i++){c=CATS[i];for(var j=0;j<c.items.length;j++){it=c.items[j];state[it.id]={checked:false,qty:it.min||1};}}
-
-var HIST_KEY=‘amayoshi_order_history’;
-var LAST_KEY=‘amayoshi_last_ordered’;
-
+CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+var HIST_KEY='amayoshi_order_history';
+var LAST_KEY='amayoshi_last_ordered';
 function loadHistory(){
-var h=[];
-try{h=JSON.parse(localStorage.getItem(HIST_KEY)||’[]’);}catch(e){}
-var cut=new Date();cut.setDate(cut.getDate()-30);cut.setHours(0,0,0,0);
-var r=[];for(var i=0;i<h.length;i++){if(new Date(h[i].date)>=cut)r.push(h[i]);}
-return r;
+  try{
+    var h=JSON.parse(localStorage.getItem(HIST_KEY)||'[]');
+    var cut=new Date(); cut.setDate(cut.getDate()-30); cut.setHours(0,0,0,0);
+    return h.filter(function(x){return new Date(x.date)>=cut;});
+  }catch(e){return [];}
 }
-function saveHistory(h){try{localStorage.setItem(HIST_KEY,JSON.stringify(h));}catch(e){}}
-function loadLast(){try{return JSON.parse(localStorage.getItem(LAST_KEY)||’{}’);}catch(e){return {};}}
-function saveLast(m){try{localStorage.setItem(LAST_KEY,JSON.stringify(m));}catch(e){}}
-
+function saveHistory(h){localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+function loadLast(){try{return JSON.parse(localStorage.getItem(LAST_KEY)||'{}');}catch(e){return {};}}
+function saveLast(m){localStorage.setItem(LAST_KEY,JSON.stringify(m));}
 function dayDiff(ds){
-var d=new Date(ds),n=new Date();
-d.setHours(0,0,0,0);n.setHours(0,0,0,0);
-return Math.round((n-d)/86400000);
+  var d=new Date(ds),n=new Date();
+  d.setHours(0,0,0,0); n.setHours(0,0,0,0);
+  return Math.round((n-d)/86400000);
 }
 function lastLabel(id){
-var m=loadLast();
-if(!m[id])return null;
-var d=dayDiff(m[id]);
-if(d>15)return null;
-if(d===0)return {text:‘今日’,cls:‘d0’};
-if(d<=3)return {text:d+‘日前’,cls:‘d1’};
-if(d<=6)return {text:d+‘日前’,cls:‘d2’};
-return {text:d+‘日前’,cls:‘d3’};
+  var m=loadLast();
+  if(!m[id]) return null;
+  var d=dayDiff(m[id]);
+  if(d>15) return null;
+  if(d===0) return {text:'今日',cls:'d0'};
+  if(d<=3)  return {text:d+'日前',cls:'d1'};
+  if(d<=6)  return {text:d+'日前',cls:'d2'};
+  return {text:d+'日前',cls:'d3'};
 }
-
 function renderOrder(){
-var el=document.getElementById(‘page-order’);
-el.innerHTML=’’;
-for(var i=0;i<CATS.length;i++){
-var cat=CATS[i];
-var cnt=0;
-for(var j=0;j<cat.items.length;j++){if(state[cat.items[j].id].checked)cnt++;}
-var div=document.createElement(‘div’);
-div.className=‘cat’;
-div.innerHTML=’<div class="cat-hd"><span class="cat-icon">’+cat.icon+’</span><span class="cat-nm">’+cat.name+’</span><span class="cat-ct">’+cnt+’/’+cat.items.length+’</span></div><div class="items" id="ci'+i+'"></div>’;
-el.appendChild(div);
-var wrap=document.getElementById(‘ci’+i);
-for(var j=0;j<cat.items.length;j++){
-var item=cat.items[j];
-var s=state[item.id];
-var lbl=lastLabel(item.id);
-var qHtml=’’;
-if(item.hasQty){qHtml=’<div class="qty-wrap"><button class="qb" onclick="chQty(event,\''+item.id+'\',-1)">−</button><span class="qv">’+s.qty+’</span><button class="qb" onclick="chQty(event,\''+item.id+'\',1)">＋</button></div>’;}
-var lHtml=lbl?’<span class="ilast '+lbl.cls+'">’+lbl.text+’</span>’:’’;
-var d=document.createElement(‘div’);
-d.className=‘item’+(s.checked?’ chk’:’’);
-d.setAttribute(‘onclick’,‘toggle(”’+item.id+’”)’);
-d.innerHTML=’<div class="cb"><span class="ck">✓</span></div><div class="item-info"><span class="iname">’+item.name+’</span>’+qHtml+’</div>’+lHtml;
-wrap.appendChild(d);
+  var el=document.getElementById('page-order');
+  el.innerHTML='';
+  CATS.forEach(function(cat){
+    var checked=cat.items.filter(function(i){return state[i.id].checked;}).length;
+    var div=document.createElement('div');
+    div.className='cat';
+    div.innerHTML='<div class="cat-hd"><span class="cat-icon">'+cat.icon+'</span><span class="cat-nm">'+cat.name+'</span><span class="cat-ct">'+checked+'/'+cat.items.length+'</span></div><div class="items" id="ci-'+cat.name+'"></div>';
+    el.appendChild(div);
+    var wrap=div.querySelector('.items');
+    cat.items.forEach(function(item){
+      var s=state[item.id];
+      var lbl=lastLabel(item.id);
+      var d=document.createElement('div');
+      d.className='item'+(s.checked?' chk':'');
+      var qtyHtml=item.hasQty?'<div class="qty-wrap"><button class="qb" onclick="chQty(event,\''+item.id+'\',-1)">−</button><span class="qv">'+s.qty+'</span><button class="qb" onclick="chQty(event,\''+item.id+'\',1)">＋</button></div>':'';
+      var lblHtml=lbl?'<span class="ilast '+lbl.cls+'">'+lbl.text+'</span>':'';
+      d.innerHTML='<div class="cb"><span class="ck">✓</span></div><div class="item-info"><span class="iname">'+item.name+'</span>'+qtyHtml+'</div>'+lblHtml;
+      d.addEventListener('click',function(e){
+        if(e.target.className==='qb'||e.target.closest&&e.target.closest('.qb')) return;
+        toggle(item.id);
+      });
+      wrap.appendChild(d);
+    });
+  });
+  updateProg();
 }
-}
-updateProg();
-}
-
 function toggle(id){state[id].checked=!state[id].checked;renderOrder();}
-
 function chQty(e,id,delta){
-e.stopPropagation();
-var item=null;
-for(var i=0;i<CATS.length;i++){for(var j=0;j<CATS[i].items.length;j++){if(CATS[i].items[j].id===id){item=CATS[i].items[j];break;}}}
-state[id].qty=Math.min(item.max||99,Math.max(item.min||1,state[id].qty+delta));
-renderOrder();
+  e.stopPropagation();
+  var item=null;
+  CATS.forEach(function(c){c.items.forEach(function(i){if(i.id===id)item=i;});});
+  var mn=item.min||1,mx=item.max||99;
+  state[id].qty=Math.min(mx,Math.max(mn,state[id].qty+delta));
+  renderOrder();
 }
-
 function updateProg(){
-var ids=Object.keys(state);
-var n=0;
-for(var i=0;i<ids.length;i++){if(state[ids[i]].checked)n++;}
-document.getElementById(‘progFill’).style.width=(n/ids.length*100)+’%’;
-document.getElementById(‘progLbl’).textContent=n+’ / ’+ids.length;
+  var ids=Object.keys(state);
+  var n=ids.filter(function(id){return state[id].checked;}).length;
+  document.getElementById('progFill').style.width=(n/ids.length*100)+'%';
+  document.getElementById('progLbl').textContent=n+' / '+ids.length;
 }
-
 function resetAll(){
-for(var i=0;i<CATS.length;i++){for(var j=0;j<CATS[i].items.length;j++){var it=CATS[i].items[j];state[it.id]={checked:false,qty:it.min||1};}}
-renderOrder();showToast(‘リセットしました’);
+  CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+  renderOrder();
+  showToast('リセットしました');
 }
-
 function buildText(){
-var lines=[],now=new Date();
-var ds=(now.getMonth()+1)+’/’+now.getDate();
-var yw=[‘日’,‘月’,‘火’,‘水’,‘木’,‘金’,‘土’][now.getDay()];
-lines.push(’【発注】’+ds+’(’+yw+’)’);lines.push(’’);
-for(var i=0;i<CATS.length;i++){
-var cat=CATS[i],sel=[];
-for(var j=0;j<cat.items.length;j++){if(state[cat.items[j].id].checked)sel.push(cat.items[j]);}
-if(!sel.length)continue;
-lines.push(‘▼’+cat.name);
-for(var k=0;k<sel.length;k++){var it=sel[k];lines.push(it.hasQty?’・’+it.name+’ ×’+state[it.id].qty:’・’+it.name);}
-lines.push(’’);
+  var lines=[],now=new Date();
+  var ds=(now.getMonth()+1)+'/'+(now.getDate());
+  var yw=['日','月','火','水','木','金','土'][now.getDay()];
+  lines.push('【発注】'+ds+'('+yw+')');lines.push('');
+  CATS.forEach(function(cat){
+    var sel=cat.items.filter(function(i){return state[i.id].checked;});
+    if(!sel.length) return;
+    lines.push('▼'+cat.name);
+    sel.forEach(function(item){
+      lines.push(item.hasQty?'・'+item.name+' ×'+state[item.id].qty:'・'+item.name);
+    });
+    lines.push('');
+  });
+  lines.push('宜しくお願いします🙇');
+  return lines.join('\n');
 }
-lines.push(‘宜しくお願いします🙇’);
-return lines.join(’\n’);
-}
-
 function openLineModal(){
-var any=false;
-var ids=Object.keys(state);
-for(var i=0;i<ids.length;i++){if(state[ids[i]].checked){any=true;break;}}
-if(!any){showToast(‘商品を選択してください’);return;}
-document.getElementById(‘preview’).textContent=buildText();
-document.getElementById(‘modal’).className=‘overlay on’;
+  var any=Object.values(state).some(function(s){return s.checked;});
+  if(!any){showToast('商品を選択してください');return;}
+  document.getElementById('preview').textContent=buildText();
+  document.getElementById('modal').classList.add('on');
 }
-function closeModal(){document.getElementById(‘modal’).className=‘overlay’;}
-
+function closeModal(){document.getElementById('modal').classList.remove('on');}
 function copyLine(){
-var text=document.getElementById(‘preview’).textContent;
-var now=new Date();
-var pad=function(n){return n<10?‘0’+n:’’+n;};
-var ds=now.getFullYear()+’-’+pad(now.getMonth()+1)+’-’+pad(now.getDate());
-var ts=now.getHours()+’:’+pad(now.getMinutes());
-var items=[];
-for(var i=0;i<CATS.length;i++){for(var j=0;j<CATS[i].items.length;j++){var it=CATS[i].items[j];if(state[it.id].checked)items.push({id:it.id,name:it.name,qty:it.hasQty?state[it.id].qty:null});}}
-var hist=loadHistory();
-hist.unshift({date:ds,time:ts,items:items});
-if(hist.length>30)hist.length=30;
-saveHistory(hist);
-var last=loadLast();
-for(var i=0;i<items.length;i++){last[items[i].id]=ds;}
-saveLast(last);
-var done=function(){closeModal();showToast(‘コピーしました！’);renderOrder();setTimeout(function(){try{window.close();}catch(e){}},1000);};
-if(navigator.clipboard&&navigator.clipboard.writeText){
-navigator.clipboard.writeText(text).then(done).catch(function(){fallbackCopy(text,done);});
-}else{fallbackCopy(text,done);}
+  var text=document.getElementById('preview').textContent;
+  var now=new Date();
+  var ds=now.getFullYear()+'-'+(now.getMonth()+1<10?'0':'')+(now.getMonth()+1)+'-'+(now.getDate()<10?'0':'')+now.getDate();
+  var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  var items=[];
+  CATS.forEach(function(c){c.items.forEach(function(i){if(state[i.id].checked)items.push({id:i.id,name:i.name,qty:i.hasQty?state[i.id].qty:null});});});
+  var hist=loadHistory();
+  hist.unshift({date:ds,time:ts,items:items,text:text});
+  if(hist.length>30) hist.pop();
+  saveHistory(hist);
+  var last=loadLast();
+  items.forEach(function(i){last[i.id]=ds;});
+  saveLast(last);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      closeModal(); showToast('コピーしました！LINEに貼り付けてください'); renderOrder();
+    }).catch(function(){fallbackCopy(text);});
+  } else { fallbackCopy(text); }
 }
-function fallbackCopy(text,cb){
-var ta=document.createElement(‘textarea’);
-ta.value=text;ta.style.cssText=‘position:fixed;top:0;left:0;opacity:0;’;
-document.body.appendChild(ta);ta.focus();ta.select();
-try{document.execCommand(‘copy’);}catch(e){}
-document.body.removeChild(ta);cb();
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{document.execCommand('copy'); closeModal(); showToast('コピーしました！LINEに貼り付けてください'); renderOrder();}
+  catch(e){showToast('コピーに失敗しました');}
+  document.body.removeChild(ta);
 }
-
 function renderHist(){
-var el=document.getElementById(‘page-hist’);
-var hist=loadHistory();
-if(!hist.length){el.innerHTML=’<div class="hist-empty"><div class="hist-empty-ic">📭</div>まだ履歴がありません</div>’;return;}
-el.innerHTML=’’;
-for(var i=0;i<hist.length;i++){
-var h=hist[i];
-var d=new Date(h.date);
-var yw=[‘日’,‘月’,‘火’,‘水’,‘木’,‘金’,‘土’][d.getDay()];
-var diff=dayDiff(h.date);
-var ds=diff===0?‘今日’:diff===1?‘昨日’:diff+‘日前’;
-var chips=’’;
-for(var j=0;j<h.items.length;j++){var it=h.items[j];chips+=’<span class="hchip">’+it.name+(it.qty?’ ×’+it.qty:’’)+’</span>’;}
-var card=document.createElement(‘div’);
-card.className=‘hcard’;
-card.innerHTML=’<div class="hcard-hd"><span class="hdate">’+h.date.replace(/-/g,’/’)+’(’+yw+’) ‘+h.time+’</span><span class="hmeta">’+ds+’ · ‘+h.items.length+‘品</span></div><div class="hchips">’+chips+’</div><div class="hcard-ft"><button class="hbtn-del" onclick="delHist('+i+')">削除</button></div>’;
-el.appendChild(card);
+  var el=document.getElementById('page-hist');
+  var hist=loadHistory();
+  if(!hist.length){el.innerHTML='<div class="hist-empty"><div class="hist-empty-ic">📭</div>まだ履歴がありません</div>';return;}
+  el.innerHTML='';
+  hist.forEach(function(h,idx){
+    var d=new Date(h.date);
+    var yw=['日','月','火','水','木','金','土'][d.getDay()];
+    var diff=dayDiff(h.date);
+    var ds=diff===0?'今日':diff===1?'昨日':diff+'日前';
+    var card=document.createElement('div');
+    card.className='hcard';
+    var chips=h.items.map(function(i){return '<span class="hchip">'+i.name+(i.qty?' ×'+i.qty:'')+'</span>';}).join('');
+    card.innerHTML='<div class="hcard-hd"><span class="hdate">'+h.date.replace(/-/g,'/')+'('+yw+') '+h.time+'</span><span class="hmeta">'+ds+' · '+h.items.length+'品</span></div><div class="hchips">'+chips+'</div><div class="hcard-ft"><button class="hbtn hbtn-load" onclick="loadFromHist('+idx+')">この内容を読み込む</button><button class="hbtn hbtn-del" onclick="delHist('+idx+')">削除</button></div>';
+    el.appendChild(card);
+  });
 }
+function loadFromHist(idx){
+  var hist=loadHistory(); var h=hist[idx];
+  CATS.forEach(function(c){c.items.forEach(function(i){state[i.id]={checked:false,qty:i.min||1};});});
+  h.items.forEach(function(i){if(state[i.id]!==undefined){state[i.id].checked=true;if(i.qty)state[i.id].qty=i.qty;}});
+  switchTab('order'); showToast(h.date+'の発注を読み込みました');
 }
-
 function delHist(idx){
-var hist=loadHistory();hist.splice(idx,1);saveHistory(hist);renderHist();showToast(‘削除しました’);
+  var hist=loadHistory(); hist.splice(idx,1); saveHistory(hist); renderHist(); showToast('削除しました');
 }
-
 function switchTab(t){
-document.getElementById(‘tab-order’).className=‘tab’+(t===‘order’?’ on’:’’);
-document.getElementById(‘tab-hist’).className=‘tab’+(t===‘hist’?’ on’:’’);
-document.getElementById(‘page-order’).className=‘page’+(t===‘order’?’ on’:’’);
-document.getElementById(‘page-hist’).className=‘page’+(t===‘hist’?’ on’:’’);
-document.getElementById(‘progRow’).style.display=t===‘order’?‘flex’:‘none’;
-document.getElementById(‘bot’).style.display=t===‘order’?‘flex’:‘none’;
-if(t===‘hist’)renderHist();
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('on',['order','hist'][i]===t);});
+  document.getElementById('page-order').classList.toggle('on',t==='order');
+  document.getElementById('page-hist').classList.toggle('on',t==='hist');
+  document.getElementById('progRow').style.display=t==='order'?'flex':'none';
+  document.getElementById('bot').style.display=t==='order'?'flex':'none';
+  if(t==='hist') renderHist();
 }
-
 function showToast(msg){
-var t=document.getElementById(‘toast’);
-t.textContent=msg;t.className=‘toast on’;
-setTimeout(function(){t.className=‘toast’;},2500);
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2500);
 }
-
 renderOrder();
 </script>
-
 </body>
 </html>
